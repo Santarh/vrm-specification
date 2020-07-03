@@ -53,10 +53,10 @@ Written against the glTF 2.0 spec.
 - glTF [`doubleSided`](https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#double-sided)
 
 #### MToon Defined Properties
-|                         |  型  |                        説明                         |
-| :---------------------- | :--- | :-------------------------------------------------- |
-| TransparentWithZWrite   | bool | RenderMode が TransparentZWrite であるとき `true`   |
-| RenderQueueOffsetNumber | int  | RenderMode のデフォルト描画順に対するオフセット値。 |
+|                         |  型  |                         説明                          |
+| :---------------------- | :--- | :---------------------------------------------------- |
+| TransparentWithZWrite   | bool | RenderMode が TransparentWithZWrite であるとき `true` |
+| RenderQueueOffsetNumber | int  | RenderMode のデフォルト描画順に対するオフセット値     |
 
 
 #### RenderMode
@@ -99,24 +99,24 @@ MToon ではそのために TransparentWithZWrite を導入していますが、
 値が大きいほど描画順は後方になります。
 値のとりうる範囲について次の表に示します。
 
-|    RenderMode     | Min Value | Max Value |
-| :---------------- | :-------- | :-------- |
-| Opaque            | 0         | 0         |
-| Cutout            | 0         | 0         |
-| Transparent       | -9        | 0         |
-| TransparentZWrite | 0         | +9        |
+|      RenderMode       | Min Value | Max Value |
+| :-------------------- | :-------- | :-------- |
+| Opaque                | 0         | 0         |
+| Cutout                | 0         | 0         |
+| Transparent           | -9        | 0         |
+| TransparentWithZWrite | 0         | +9        |
 
 また、どのような値になったとしても、前述の RenderQueue による描画の順番の方が優先されます。
 この動作について次の表で例示します。
 
-| 描画順 |    RenderMode     | RenderQueueOffsetNumber |
-| :----- | :---------------- | :---------------------- |
-| 1.     | Opaque            | N/A                     |
-| 2.     | Cutout            | N/A                     |
-| 3.     | TransparentZWrite | 0                       |
-| 4.     | TransparentZWrite | +9                      |
-| 5.     | Transparent       | -9                      |
-| 6.     | Transparent       | 0                       |
+| 描画順 |      RenderMode       | RenderQueueOffsetNumber |
+| :----- | :-------------------- | :---------------------- |
+| 1.     | Opaque                | N/A                     |
+| 2.     | Cutout                | N/A                     |
+| 3.     | TransparentWithZWrite | 0                       |
+| 4.     | TransparentWithZWrite | +9                      |
+| 5.     | Transparent           | -9                      |
+| 6.     | Transparent           | 0                       |
 
 
 ### ColorDefinition
