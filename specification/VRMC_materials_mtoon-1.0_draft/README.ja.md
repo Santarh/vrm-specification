@@ -45,19 +45,20 @@ Written against the glTF 2.0 spec.
 | :------------ | :--- | :----------------------- |
 | VersionNumber | int  | この拡張のバージョン番号 |
 
-### RenderingDefinition
+
+
+### Rendering
 描画に関する MToon の定義を述べます。
 
 #### Dependencies
-- glTF [`alphaMode`](https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#alpha-coverage)
-- glTF [`doubleSided`](https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#double-sided)
+- [`alphaMode`](https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#alpha-coverage)
+- [`doubleSided`](https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#double-sided)
 
 #### MToon Defined Properties
 |                         |  型  |                         説明                          |
 | :---------------------- | :--- | :---------------------------------------------------- |
 | TransparentWithZWrite   | bool | RenderMode が TransparentWithZWrite であるとき `true` |
 | RenderQueueOffsetNumber | int  | RenderMode のデフォルト描画順に対するオフセット値     |
-
 
 #### RenderMode
 このマテリアルがどのようなアルファ処理で描画されるのかを指定します。
@@ -68,7 +69,8 @@ Written against the glTF 2.0 spec.
 - Transparent - アルファ値を基に、背景色とブレンドして描画します。
 - TransparentWithZWrite - 描画の仕方は Transparent と同じですが、加えて ZBuffer に対して書き込みを行います。
 
-これらのモードは、次の表のように 2 つのプロパティで定義されます。
+これらのモードは、glTF の `alphaMode` および MToon の `TransparentWithZWrite` の 2 つの組み合わせで定義されます。
+これについて次の表に示します。
 
 |                       | `alphaMode` | `TransparentWithZWrite` |
 | :-------------------- | :---------- | :---------------------- |
@@ -96,10 +98,10 @@ MToon は次のような順番で描画されることを期待します。
 MToon ではそのために TransparentWithZWrite を導入していますが、さらに描画順制御の仕組みを導入しています。
 `RenderQueueOffsetNumber` はそれぞれの RenderMode のデフォルト描画順に対するオフセット値です。
 `RenderQueueOffsetNumber` は RenderMode が `Transparent` `TransparentWithZWrite` のときに作用します。
-値が大きいほど描画順は後方になります。
+値が大きいほど、描画の順番は後回しにされます。
 値のとりうる範囲について次の表に示します。
 
-|      RenderMode       | Min Value | Max Value |
+|                       | Min Value | Max Value |
 | :-------------------- | :-------- | :-------- |
 | Opaque                | 0         | 0         |
 | Cutout                | 0         | 0         |
@@ -109,30 +111,48 @@ MToon ではそのために TransparentWithZWrite を導入していますが、
 また、どのような値になったとしても、前述の RenderQueue による描画の順番の方が優先されます。
 この動作について次の表で例示します。
 
-| 描画順 |      RenderMode       | RenderQueueOffsetNumber |
-| :----- | :-------------------- | :---------------------- |
-| 1.     | Opaque                | N/A                     |
-| 2.     | Cutout                | N/A                     |
-| 3.     | TransparentWithZWrite | 0                       |
-| 4.     | TransparentWithZWrite | +9                      |
-| 5.     | Transparent           | -9                      |
-| 6.     | Transparent           | 0                       |
+| Order |      RenderMode       | RenderQueueOffsetNumber |
+| :---- | :-------------------- | :---------------------- |
+| 1     | Opaque                | N/A                     |
+| 2     | Cutout                | N/A                     |
+| 3     | TransparentWithZWrite | 0                       |
+| 4     | TransparentWithZWrite | +9                      |
+| 5     | Transparent           | -9                      |
+| 6     | Transparent           | 0                       |
+
+RenderQueueOffset の実装が困難なときは `RenderQueueOffsetNumber` が `0` であるとみなしてください。
 
 
-### ColorDefinition
 
-* public Color LitColor;
-GLTFのpbrMetallicRoughness/baseColorFactor に格納する
+### Color
+色に関する定義について述べます。
 
-* public Texture2D LitMultiplyTexture;
-GLTFのpbrMetallicRoughness/baseColorTexture/index に格納する
+#### Dependencies
+- [`pbrMetallicRoughness.baseColorFactor`](https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#metallic-roughness-material)
+- [`pbrMetallicRoughness.baseColorTexture`](https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#metallic-roughness-material)
+- [`alphaCutoff`](https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#alpha-coverage)
 
-* public Color ShadeColor;
-* public Texture2D ShadeMultiplyTexture;
+#### MToon Defined Properties
+|                       |   型   |                         説明                          |
+| :-------------------- | :----- | :---------------------------------------------------- |
+| TransparentWithZWrite | bool   | RenderMode が TransparentWithZWrite であるとき `true` |
+| ShadeColor            | float4 | ShadeColor の色成分                                   |
+| ShadeMultiplyTexture  | int    | ShadeColor のテクスチャ。Buffer の index を指す       |
 
-* public float CutoutThresholdValue;
-GLTFの alphaCutoff に格納する    
-    
+#### Lit Color
+Albedo を表します。
+`pbrMetallicRoughness.baseColorFactor` および `pbrMetallicRoughness.baseColorTexture` に格納されます。
+
+### Shade Color
+光に当たらない部分の色合いを表します。
+`ShadeColor` および `ShadeMultiplyTexture` に格納されます。
+
+### Cutout Threshold
+Cutout 処理におけるアルファ値のしきい値を表します。
+これは glTF の `alphaCutoff` に準拠します。
+
+
+
 ### LightingDefinition
     
 * public LitAndShadeMixingDefinition LitAndShadeMixing;
