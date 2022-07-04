@@ -449,10 +449,11 @@ VRMC_node_constraint 拡張の仕様バージョンを表します。
 
 #### Properties
 
-|          | 型        | 説明                    | 必須              |
-|:---------|:----------|:------------------------|:------------------|
-| `source` | `integer` | このNodeを制約するNodeのIndex | ✅ Yes             |
-| `weight` | `number`  | このConstraintのWeight     | No, 初期値: `1.0` |
+|                  |      型      |                説明                 |          必須           |
+| :--------------- | :----------- | :---------------------------------- | :---------------------- |
+| `source`         | `integer`    | このNodeを制約するNodeのIndex       | ✅ Yes                   |
+| `rotationOffset` | `number [4]` | soruce Nodeの回転に対するOffset回転 | No, 初期値: `[0,0,0,1]` |
+| `weight`         | `number`     | このConstraintのWeight              | No, 初期値: `1.0`       |
 
 - JSON schema: [VRMC_node_constraint.rotationConstraint.schema.json](./schema/VRMC_node_constraint.rotationConstraint.schema.json)
 
@@ -463,6 +464,15 @@ VRMC_node_constraint 拡張の仕様バージョンを表します。
 - 型: `integer`
 - 必須: Yes
 - 最小値: `>= 0`
+
+#### rotationConstraint.rotationOffset
+
+source Nodeの回転に対するOffset回転を指定します。
+Offset回転は単位クォータニオンで `(x,y,z,w)` の順であり `w` はスカラー成分です。
+
+
+- 型: `number [4]`
+- 必須: No, 初期値: `[0,0,0,1]`
 
 #### rotationConstraint.weight
 

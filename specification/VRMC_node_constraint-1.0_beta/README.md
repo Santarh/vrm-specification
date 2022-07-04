@@ -450,10 +450,11 @@ An object describes a set of parameters of a [Rotation Constraint](#rotation-con
 
 #### Properties
 
-|          | Type      | Description                               | Required           |
-|:---------|:----------|:------------------------------------------|:-------------------|
-| `source` | `integer` | The index of the node constrains the node | ✅ Yes              |
-| `weight` | `number`  | The weight of the constraint              | No, default: `1.0` |
+|                  |     Type     |                   Description                   |         Required         |
+| :--------------- | :----------- | :---------------------------------------------- | :----------------------- |
+| `source`         | `integer`    | The index of the node constrains the node       | ✅ Yes                    |
+| `rotationOffset` | `number [4]` | The offset rotation from source node's rotation | No, default: `[0,0,0,1]` |
+| `weight`         | `number`     | The weight of the constraint                    | No, default: `1.0`       |
 
 - JSON schema: [VRMC_node_constraint.rotationConstraint.schema.json](./schema/VRMC_node_constraint.rotationConstraint.schema.json)
 
@@ -464,6 +465,14 @@ The index of the node constrains the node.
 - Type: `integer`
 - Required: Yes
 - Minimum: `>= 0`
+
+#### rotationConstraint.rotationOffset
+
+The offset rotation from the source node's rotation.
+The offset rotation is the unit quaternion rotation in the order (x,y,z,w), where w is the scalar.
+
+- Type: `number [4]`
+- Required: No, default: `[0,0,0,1]`
 
 #### rotationConstraint.weight
 

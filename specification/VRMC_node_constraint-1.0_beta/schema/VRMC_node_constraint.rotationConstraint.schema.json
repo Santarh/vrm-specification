@@ -11,7 +11,7 @@
     },
     "rotationOffset": {
       "type": "array",
-      "description": "The offset rotation from source node's rotation.",
+      "description": "The offset rotation from the source node's rotation.",
       "items": {
         "type": "number"
       },
