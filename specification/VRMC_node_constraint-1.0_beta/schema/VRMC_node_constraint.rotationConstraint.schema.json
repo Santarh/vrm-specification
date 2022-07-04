@@ -9,6 +9,16 @@
       "allOf": [ { "$ref": "glTFid.schema.json" } ],
       "description": "The index of the node constrains the node."
     },
+    "rotationOffset": {
+      "type": "array",
+      "description": "The offset rotation from source node's rotation.",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 4,
+      "maxItems": 4,
+      "default": [ 0.0, 0.0, 0.0, 1.0 ]
+    },
     "weight": {
       "type": "number",
       "description": "The weight of the constraint.",
